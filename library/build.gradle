@@ -2,9 +2,9 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
-//group = 'com.patloew.rxfit'
-version = '1.2.3.1'
-//project.archivesBaseName = 'rxfit'
+group = 'com.patloew.rxfit'
+version = '1.2.4'
+project.archivesBaseName = 'rxfit'
 
 android {
     compileSdkVersion 23

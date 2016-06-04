@@ -660,12 +660,12 @@ public class RxFit {
 
     public static class Components {
 
-        public static <T extends BaseObservable> T create(Func1<RxFit, T> constructor) {
-            return constructor.call(get());
+        public static <T extends BaseObservable<R>, R> Observable<R> create(Func1<RxFit, T> constructor) {
+            return Observable.create(constructor.call(get()));
         }
 
-        public static <T extends BaseSingle> T createSingle(Func1<RxFit, T> constructor) {
-            return constructor.call(get());
+        public static <T extends BaseSingle<R>, R> Single<R> createSingle(Func1<RxFit, T> constructor) {
+            return Single.create(constructor.call(get()));
         }
     }
 
