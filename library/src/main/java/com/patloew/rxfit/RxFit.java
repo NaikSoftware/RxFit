@@ -33,7 +33,10 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.exceptions.Exceptions;
+import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Function;
+import rx.functions.Functions;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -652,6 +655,18 @@ public class RxFit {
         }
 
 
+    }
+
+
+    public static class Components {
+
+        public static <T extends BaseObservable> T create(Func1<RxFit, T> constructor) {
+            return constructor.call(get());
+        }
+
+        public static <T extends BaseSingle> T createSingle(Func1<RxFit, T> constructor) {
+            return constructor.call(get());
+        }
     }
 
 
