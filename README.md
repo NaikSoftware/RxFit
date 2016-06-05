@@ -65,8 +65,8 @@ The lib is available on JitPack. Add the following to your `build.gradle`:
 
 # Credits
 
-The code for managing the GoogleApiClient is taken from the [Android-ReactiveLocation](https://github.com/mcharmas/Android-ReactiveLocation) library by Michał Charmas, which is licensed under the Apache License, Version 2.0.
-The Fit API and most of code taken from [RxFit](https://github.com/patloew/RxFit) library by Patrick Löwenstein, which is licensed under the Apache License, Version 2.0.
+ - The code for managing the GoogleApiClient is taken from the [Android-ReactiveLocation](https://github.com/mcharmas/Android-ReactiveLocation) library by Michał Charmas, which is licensed under the Apache License, Version 2.0.
+ - The Fit API and most of code taken from [RxFit](https://github.com/patloew/RxFit) library by Patrick Löwenstein, which is licensed under the Apache License, Version 2.0.
 
 # License
 
