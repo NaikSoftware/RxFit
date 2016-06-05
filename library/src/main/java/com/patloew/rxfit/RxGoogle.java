@@ -71,7 +71,7 @@ public class RxGoogle {
      *
      * @param ctx Context.
      * @param apis An array of Fitness APIs to be used in your app.
-     * @param scopes An array of the Scopes to be requested for your app.
+     * @param scopes An array of the Scopes tRo be requested for your app.
      */
     public static void init(@NonNull Context ctx, @NonNull Api<? extends Api.ApiOptions.NotRequiredOptions>[] apis, @NonNull Scope[] scopes) {
         if(instance == null) { instance = new RxGoogle(ctx, apis, scopes); }
