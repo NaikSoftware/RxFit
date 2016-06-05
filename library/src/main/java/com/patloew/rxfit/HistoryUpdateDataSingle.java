@@ -26,7 +26,7 @@ public class HistoryUpdateDataSingle extends BaseSingle<Status> {
 
     private final DataUpdateRequest dataUpdateRequest;
 
-    HistoryUpdateDataSingle(RxFit rxFit, DataUpdateRequest dataUpdateRequest, Long timeout, TimeUnit timeUnit) {
+    HistoryUpdateDataSingle(RxGoogle rxFit, DataUpdateRequest dataUpdateRequest, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataUpdateRequest = dataUpdateRequest;
     }

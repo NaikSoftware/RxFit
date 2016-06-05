@@ -19,7 +19,7 @@ import rx.Subscriber;
  * limitations under the License. */
 public class CheckConnectionObservable extends BaseObservable<Void> {
 
-    CheckConnectionObservable(RxFit rxFit) {
+    CheckConnectionObservable(RxGoogle rxFit) {
         super(rxFit, null, null);
     }
 

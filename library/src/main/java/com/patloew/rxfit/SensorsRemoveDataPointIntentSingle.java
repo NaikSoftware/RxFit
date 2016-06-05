@@ -27,7 +27,7 @@ public class SensorsRemoveDataPointIntentSingle extends BaseSingle<Status> {
 
     private final PendingIntent pendingIntent;
 
-    SensorsRemoveDataPointIntentSingle(RxFit rxFit, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
+    SensorsRemoveDataPointIntentSingle(RxGoogle rxFit, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.pendingIntent = pendingIntent;
     }

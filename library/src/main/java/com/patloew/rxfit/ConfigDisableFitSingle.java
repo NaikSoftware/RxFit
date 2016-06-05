@@ -23,7 +23,7 @@ import rx.SingleSubscriber;
  * limitations under the License. */
 public class ConfigDisableFitSingle extends BaseSingle<Status> {
 
-    ConfigDisableFitSingle(RxFit rxFit, Long timeout, TimeUnit timeUnit) {
+    ConfigDisableFitSingle(RxGoogle rxFit, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
     }
 

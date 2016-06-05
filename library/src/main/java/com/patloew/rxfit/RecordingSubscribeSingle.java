@@ -29,7 +29,7 @@ public class RecordingSubscribeSingle extends BaseSingle<Status> {
     private final DataSource dataSource;
     private final DataType dataType;
 
-    RecordingSubscribeSingle(RxFit rxFit, DataSource dataSource, DataType dataType, Long timeout, TimeUnit timeUnit) {
+    RecordingSubscribeSingle(RxGoogle rxFit, DataSource dataSource, DataType dataType, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataSource = dataSource;
         this.dataType = dataType;

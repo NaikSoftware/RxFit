@@ -43,7 +43,7 @@ public abstract class BaseRx<T> {
     private final Long timeoutTime;
     private final TimeUnit timeoutUnit;
 
-    protected BaseRx(@NonNull RxFit rxFit, Long timeout, TimeUnit timeUnit) {
+    protected BaseRx(@NonNull RxGoogle rxFit, Long timeout, TimeUnit timeUnit) {
         this.ctx = rxFit.getContext();
         this.services = rxFit.getApis();
         this.scopes = rxFit.getScopes();
@@ -52,8 +52,8 @@ public abstract class BaseRx<T> {
             this.timeoutTime = timeout;
             this.timeoutUnit = timeUnit;
         } else {
-            this.timeoutTime = RxFit.getDefaultTimeout();
-            this.timeoutUnit = RxFit.getDefaultTimeoutUnit();
+            this.timeoutTime = RxGoogle.getDefaultTimeout();
+            this.timeoutUnit = RxGoogle.getDefaultTimeoutUnit();
         }
     }
 

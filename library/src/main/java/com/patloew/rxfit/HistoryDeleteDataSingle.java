@@ -26,7 +26,7 @@ public class HistoryDeleteDataSingle extends BaseSingle<Status> {
 
     private final DataDeleteRequest dataDeleteRequest;
 
-    HistoryDeleteDataSingle(RxFit rxFit, DataDeleteRequest dataDeleteRequest, Long timeout, TimeUnit timeUnit) {
+    HistoryDeleteDataSingle(RxGoogle rxFit, DataDeleteRequest dataDeleteRequest, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataDeleteRequest = dataDeleteRequest;
     }

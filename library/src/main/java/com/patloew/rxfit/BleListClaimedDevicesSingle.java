@@ -31,7 +31,7 @@ public class BleListClaimedDevicesSingle extends BaseSingle<List<BleDevice>> {
 
     private final DataType dataType;
 
-    BleListClaimedDevicesSingle(RxFit rxFit, DataType dataType, Long timeout, TimeUnit timeUnit) {
+    BleListClaimedDevicesSingle(RxGoogle rxFit, DataType dataType, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataType = dataType;
     }

@@ -29,7 +29,7 @@ public class SessionReadSingle extends BaseSingle<SessionReadResult> {
 
     private final SessionReadRequest sessionReadRequest;
 
-    SessionReadSingle(RxFit rxFit, SessionReadRequest sessionReadRequest, Long timeout, TimeUnit timeUnit) {
+    SessionReadSingle(RxGoogle rxFit, SessionReadRequest sessionReadRequest, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.sessionReadRequest = sessionReadRequest;
     }

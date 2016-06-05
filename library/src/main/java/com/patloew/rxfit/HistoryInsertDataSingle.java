@@ -26,7 +26,7 @@ public class HistoryInsertDataSingle extends BaseSingle<Status> {
 
     private final DataSet dataSet;
 
-    HistoryInsertDataSingle(RxFit rxFit, DataSet dataSet, Long timeout, TimeUnit timeUnit) {
+    HistoryInsertDataSingle(RxGoogle rxFit, DataSet dataSet, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataSet = dataSet;
     }

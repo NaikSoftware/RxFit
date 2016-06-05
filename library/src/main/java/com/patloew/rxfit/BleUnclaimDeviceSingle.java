@@ -28,7 +28,7 @@ public class BleUnclaimDeviceSingle extends BaseSingle<Status> {
     private final BleDevice bleDevice;
     private final String deviceAddress;
 
-    BleUnclaimDeviceSingle(RxFit rxFit, BleDevice bleDevice, String deviceAddress, Long timeout, TimeUnit timeUnit) {
+    BleUnclaimDeviceSingle(RxGoogle rxFit, BleDevice bleDevice, String deviceAddress, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.bleDevice = bleDevice;
         this.deviceAddress = deviceAddress;

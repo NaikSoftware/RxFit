@@ -31,7 +31,7 @@ public class RecordingListSubscriptionsSingle extends BaseSingle<List<Subscripti
 
     private final DataType dataType;
 
-    RecordingListSubscriptionsSingle(RxFit rxFit, DataType dataType, Long timeout, TimeUnit timeUnit) {
+    RecordingListSubscriptionsSingle(RxGoogle rxFit, DataType dataType, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataType = dataType;
     }

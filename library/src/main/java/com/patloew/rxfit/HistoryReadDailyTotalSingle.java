@@ -30,7 +30,7 @@ public class HistoryReadDailyTotalSingle extends BaseSingle<DataSet> {
 
     private final DataType dataType;
 
-    HistoryReadDailyTotalSingle(RxFit rxFit, DataType dataType, Long timeout, TimeUnit timeUnit) {
+    HistoryReadDailyTotalSingle(RxGoogle rxFit, DataType dataType, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataType = dataType;
     }

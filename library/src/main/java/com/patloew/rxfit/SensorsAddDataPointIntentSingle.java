@@ -29,7 +29,7 @@ public class SensorsAddDataPointIntentSingle extends BaseSingle<Status> {
     private final SensorRequest sensorRequest;
     private final PendingIntent pendingIntent;
 
-    SensorsAddDataPointIntentSingle(RxFit rxFit, SensorRequest sensorRequest, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
+    SensorsAddDataPointIntentSingle(RxGoogle rxFit, SensorRequest sensorRequest, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.sensorRequest = sensorRequest;
         this.pendingIntent = pendingIntent;

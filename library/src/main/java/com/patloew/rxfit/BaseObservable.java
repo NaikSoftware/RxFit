@@ -44,7 +44,7 @@ public abstract class BaseObservable<T> extends BaseRx<T> implements Observable.
 
     private final HashMap<GoogleApiClient, Subscriber<? super T>> subscriptionInfoHashMap = new HashMap<>();
 
-    protected BaseObservable(@NonNull RxFit rxFit, Long timeout, TimeUnit timeUnit) {
+    protected BaseObservable(@NonNull RxGoogle rxFit, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         handleResolution = true;
     }

@@ -37,7 +37,7 @@ public class BleScanObservable extends BaseObservable<BleDevice> {
     private BleScanCallback bleScanCallback;
 
     @RequiresPermission("android.permission.BLUETOOTH_ADMIN")
-    BleScanObservable(RxFit rxFit, DataType[] dataTypes, Integer stopTimeSecs, Long timeout, TimeUnit timeUnit) {
+    BleScanObservable(RxGoogle rxFit, DataType[] dataTypes, Integer stopTimeSecs, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataTypes = dataTypes;
         this.stopTimeSecs = stopTimeSecs;

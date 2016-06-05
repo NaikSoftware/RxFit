@@ -33,12 +33,9 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.exceptions.Exceptions;
-import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Function;
-import rx.functions.Functions;
 
-/* Copyright 2016 Patrick Löwenstein
+/* Copyright 2016 Patrick Löwenstein, Nickolay Savchenko
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,14 +51,14 @@ import rx.functions.Functions;
  *
  * -----------------------------
  *
- * Factory for Google Fit API observables. Make sure to include all the APIs
+ * Factory for Google API observables. Make sure to include all the APIs
  * and Scopes that you need for your app. Also make sure to have the Location
  * and Body Sensors permission on Marshmallow, if they are needed by your
- * Fit API requests.
+ * Google API requests.
  */
-public class RxFit {
+public class RxGoogle {
 
-    private static RxFit instance = null;
+    private static RxGoogle instance = null;
 
     private static Long timeoutTime = null;
     private static TimeUnit timeoutUnit = null;
@@ -70,14 +67,14 @@ public class RxFit {
     private final Api<? extends Api.ApiOptions.NotRequiredOptions>[] apis;
     private final Scope[] scopes;
 
-    /* Initializes the singleton instance of RxFit
+    /* Initializes the singleton instance of RxGoogle
      *
      * @param ctx Context.
      * @param apis An array of Fitness APIs to be used in your app.
      * @param scopes An array of the Scopes to be requested for your app.
      */
     public static void init(@NonNull Context ctx, @NonNull Api<? extends Api.ApiOptions.NotRequiredOptions>[] apis, @NonNull Scope[] scopes) {
-        if(instance == null) { instance = new RxFit(ctx, apis, scopes); }
+        if(instance == null) { instance = new RxGoogle(ctx, apis, scopes); }
     }
 
     /* Set a default timeout for all requests to the Fit API made in the lib.
@@ -99,15 +96,15 @@ public class RxFit {
         timeoutUnit = null;
     }
 
-    /* Gets the singleton instance of RxFit, after it was initialized.
+    /* Gets the singleton instance of RxGoogle, after it was initialized.
      */
-    private static RxFit get() {
-        if(instance == null) { throw new IllegalStateException("RxFit not initialized"); }
+    private static RxGoogle get() {
+        if(instance == null) { throw new IllegalStateException("RxGoogle not initialized"); }
         return instance;
     }
 
 
-    private RxFit(@NonNull Context ctx, @NonNull Api<? extends Api.ApiOptions.NotRequiredOptions>[] apis, @NonNull Scope[] scopes) {
+    private RxGoogle(@NonNull Context ctx, @NonNull Api<? extends Api.ApiOptions.NotRequiredOptions>[] apis, @NonNull Scope[] scopes) {
         this.ctx = ctx.getApplicationContext();
         this.apis = apis;
         this.scopes = scopes;
@@ -138,12 +135,12 @@ public class RxFit {
      * For example, a wear app might need to be notified, if the user
      * allowed accessing fitness data (which means that the connection
      * was successful). As an alternative, use doOnCompleted(...) and
-     * doOnError(...) on any other RxFit Observable.
+     * doOnError(...) on any other RxGoogle Observable.
      *
      * This Completable completes if the connection was successful.
      */
     public static Completable checkConnection() {
-        return Completable.fromObservable(Observable.create(new CheckConnectionObservable(RxFit.get())));
+        return Completable.fromObservable(Observable.create(new CheckConnectionObservable(RxGoogle.get())));
     }
 
 
@@ -170,7 +167,7 @@ public class RxFit {
         }
 
         private static Single<Status> claimDeviceInternal(BleDevice bleDevice, String deviceAddress, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new BleClaimDeviceSingle(RxFit.get(), bleDevice, deviceAddress, timeout, timeUnit));
+            return Single.create(new BleClaimDeviceSingle(RxGoogle.get(), bleDevice, deviceAddress, timeout, timeUnit));
         }
 
         // getClaimedDevices
@@ -192,7 +189,7 @@ public class RxFit {
         }
 
         private static Observable<BleDevice> getClaimedDeviceListInternal(DataType dataType, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new BleListClaimedDevicesSingle(RxFit.get(), dataType, timeout, timeUnit))
+            return Single.create(new BleListClaimedDevicesSingle(RxGoogle.get(), dataType, timeout, timeUnit))
                     .flatMapObservable(new Func1<List<BleDevice>, Observable<BleDevice>>() {
                         @Override
                         public Observable<BleDevice> call(List<BleDevice> bleDevices) {
@@ -245,7 +242,7 @@ public class RxFit {
 
         @SuppressWarnings("MissingPermission")
         private static Observable<BleDevice> scanInternal(DataType[] dataTypes, Integer stopTimeSecs, Long timeout, TimeUnit timeUnit) {
-            return Observable.create(new BleScanObservable(RxFit.get(), dataTypes, stopTimeSecs, timeout, timeUnit));
+            return Observable.create(new BleScanObservable(RxGoogle.get(), dataTypes, stopTimeSecs, timeout, timeUnit));
         }
 
         // unclaim Device
@@ -267,7 +264,7 @@ public class RxFit {
         }
 
         private static Single<Status> unclaimDeviceInternal(BleDevice bleDevice, String deviceAddress, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new BleUnclaimDeviceSingle(RxFit.get(), bleDevice, deviceAddress, timeout, timeUnit));
+            return Single.create(new BleUnclaimDeviceSingle(RxGoogle.get(), bleDevice, deviceAddress, timeout, timeUnit));
         }
 
     }
@@ -288,7 +285,7 @@ public class RxFit {
         }
 
         private static Single<DataType> createCustomDataTypeInternal(DataTypeCreateRequest dataTypeCreateRequest, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new ConfigCreateCustomDataTypeSingle(RxFit.get(), dataTypeCreateRequest, timeout, timeUnit));
+            return Single.create(new ConfigCreateCustomDataTypeSingle(RxGoogle.get(), dataTypeCreateRequest, timeout, timeUnit));
         }
 
         // disableFit
@@ -302,7 +299,7 @@ public class RxFit {
         }
 
         private static Single<Status> disableFitInternal(Long timeout, TimeUnit timeUnit) {
-            return Single.create(new ConfigDisableFitSingle(RxFit.get(), timeout, timeUnit));
+            return Single.create(new ConfigDisableFitSingle(RxGoogle.get(), timeout, timeUnit));
         }
 
         // readDataType
@@ -316,7 +313,7 @@ public class RxFit {
         }
 
         private static Single<DataType> readDataTypeInternal(String dataTypeName, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new ConfigReadDataTypeSingle(RxFit.get(), dataTypeName, timeout, timeUnit));
+            return Single.create(new ConfigReadDataTypeSingle(RxGoogle.get(), dataTypeName, timeout, timeUnit));
         }
 
     }
@@ -337,7 +334,7 @@ public class RxFit {
        }
 
        private static Single<Status> deleteInternal(DataDeleteRequest dataDeleteRequest, Long timeout, TimeUnit timeUnit) {
-           return Single.create(new HistoryDeleteDataSingle(RxFit.get(), dataDeleteRequest, timeout, timeUnit));
+           return Single.create(new HistoryDeleteDataSingle(RxGoogle.get(), dataDeleteRequest, timeout, timeUnit));
        }
 
        // insert
@@ -351,7 +348,7 @@ public class RxFit {
        }
 
        private static Single<Status> insertInternal(DataSet dataSet, Long timeout, TimeUnit timeUnit) {
-           return Single.create(new HistoryInsertDataSingle(RxFit.get(), dataSet, timeout, timeUnit));
+           return Single.create(new HistoryInsertDataSingle(RxGoogle.get(), dataSet, timeout, timeUnit));
        }
 
        // readDailyTotal
@@ -365,7 +362,7 @@ public class RxFit {
        }
 
        private static Single<DataSet> readDailyTotalInternal(DataType dataType, Long timeout, TimeUnit timeUnit) {
-           return Single.create(new HistoryReadDailyTotalSingle(RxFit.get(), dataType, timeout, timeUnit));
+           return Single.create(new HistoryReadDailyTotalSingle(RxGoogle.get(), dataType, timeout, timeUnit));
        }
 
        // read
@@ -379,7 +376,7 @@ public class RxFit {
        }
 
        private static Single<DataReadResult> readInternal(DataReadRequest dataReadRequest, Long timeout, TimeUnit timeUnit) {
-           return Single.create(new HistoryReadDataSingle(RxFit.get(), dataReadRequest, timeout, timeUnit));
+           return Single.create(new HistoryReadDataSingle(RxGoogle.get(), dataReadRequest, timeout, timeUnit));
        }
 
        // update
@@ -393,7 +390,7 @@ public class RxFit {
        }
 
        private static Single<Status> updateInternal(DataUpdateRequest dataUpdateRequest, Long timeout, TimeUnit timeUnit) {
-           return Single.create(new HistoryUpdateDataSingle(RxFit.get(), dataUpdateRequest, timeout, timeUnit));
+           return Single.create(new HistoryUpdateDataSingle(RxGoogle.get(), dataUpdateRequest, timeout, timeUnit));
        }
 
    }
@@ -422,7 +419,7 @@ public class RxFit {
         }
 
         private static Observable<Subscription> listSubscriptionsInternal(DataType dataType, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new RecordingListSubscriptionsSingle(RxFit.get(), dataType, timeout, timeUnit)).flatMapObservable(new Func1<List<Subscription>, Observable<? extends Subscription>>() {
+            return Single.create(new RecordingListSubscriptionsSingle(RxGoogle.get(), dataType, timeout, timeUnit)).flatMapObservable(new Func1<List<Subscription>, Observable<? extends Subscription>>() {
                         @Override
                         public Observable<? extends Subscription> call(List<Subscription> subscriptions) {
                             return Observable.from(subscriptions);
@@ -449,7 +446,7 @@ public class RxFit {
         }
 
         private static Single<Status> subscribeInternal(DataSource dataSource, DataType dataType, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new RecordingSubscribeSingle(RxFit.get(), dataSource, dataType, timeout, timeUnit));
+            return Single.create(new RecordingSubscribeSingle(RxGoogle.get(), dataSource, dataType, timeout, timeUnit));
         }
 
         // unsubscribe
@@ -479,7 +476,7 @@ public class RxFit {
         }
 
         private static Single<Status> unsubscribeInternal(DataSource dataSource, DataType dataType, Subscription subscription, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new RecordingUnsubscribeSingle(RxFit.get(), dataSource, dataType, subscription, timeout, timeUnit));
+            return Single.create(new RecordingUnsubscribeSingle(RxGoogle.get(), dataSource, dataType, subscription, timeout, timeUnit));
         }
 
     }
@@ -500,7 +497,7 @@ public class RxFit {
         }
 
         private static Single<Status> addDataPointIntentInternal(SensorRequest sensorRequest, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new SensorsAddDataPointIntentSingle(RxFit.get(), sensorRequest, pendingIntent, timeout, timeUnit));
+            return Single.create(new SensorsAddDataPointIntentSingle(RxGoogle.get(), sensorRequest, pendingIntent, timeout, timeUnit));
         }
 
         // removeDataPointIntent
@@ -514,7 +511,7 @@ public class RxFit {
         }
 
         private static Single<Status> removeDataPointIntentInternal(PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new SensorsRemoveDataPointIntentSingle(RxFit.get(), pendingIntent, timeout, timeUnit));
+            return Single.create(new SensorsRemoveDataPointIntentSingle(RxGoogle.get(), pendingIntent, timeout, timeUnit));
         }
 
         // getDataPoints
@@ -528,7 +525,7 @@ public class RxFit {
         }
 
         private static Observable<DataPoint> getDataPointsInternal(SensorRequest sensorRequest, Long timeout, TimeUnit timeUnit) {
-            return Observable.create(new SensorsDataPointObservable(RxFit.get(), sensorRequest, timeout, timeUnit));
+            return Observable.create(new SensorsDataPointObservable(RxGoogle.get(), sensorRequest, timeout, timeUnit));
         }
 
         // findDataSources
@@ -550,7 +547,7 @@ public class RxFit {
         }
 
         private static Observable<DataSource> findDataSourcesInternal(DataSourcesRequest dataSourcesRequest, DataType dataType, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new SensorsFindDataSourcesSingle(RxFit.get(), dataSourcesRequest, dataType, timeout, timeUnit)).flatMapObservable(new Func1<List<DataSource>, Observable<? extends DataSource>>() {
+            return Single.create(new SensorsFindDataSourcesSingle(RxGoogle.get(), dataSourcesRequest, dataType, timeout, timeUnit)).flatMapObservable(new Func1<List<DataSource>, Observable<? extends DataSource>>() {
                 @Override
                 public Observable<? extends DataSource> call(List<DataSource> dataSources) {
                     return Observable.from(dataSources);
@@ -576,7 +573,7 @@ public class RxFit {
         }
 
         private static Single<Status> insertInternal(SessionInsertRequest sessionInsertRequest, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new SessionInsertSingle(RxFit.get(), sessionInsertRequest, timeout, timeUnit));
+            return Single.create(new SessionInsertSingle(RxGoogle.get(), sessionInsertRequest, timeout, timeUnit));
         }
 
         // read
@@ -590,7 +587,7 @@ public class RxFit {
         }
 
         private static Single<SessionReadResult> readInternal(SessionReadRequest sessionReadRequest, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new SessionReadSingle(RxFit.get(), sessionReadRequest, timeout, timeUnit));
+            return Single.create(new SessionReadSingle(RxGoogle.get(), sessionReadRequest, timeout, timeUnit));
         }
 
         // registerForSessions
@@ -604,7 +601,7 @@ public class RxFit {
         }
 
         private static Single<Status> registerForSessionsInternal(PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new SessionRegisterSingle(RxFit.get(), pendingIntent, timeout, timeUnit));
+            return Single.create(new SessionRegisterSingle(RxGoogle.get(), pendingIntent, timeout, timeUnit));
         }
 
         // unregisterForSessions
@@ -618,7 +615,7 @@ public class RxFit {
         }
 
         private static Single<Status> unregisterForSessionsInternal(PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new SessionUnregisterSingle(RxFit.get(), pendingIntent, timeout, timeUnit));
+            return Single.create(new SessionUnregisterSingle(RxGoogle.get(), pendingIntent, timeout, timeUnit));
         }
 
         // start
@@ -632,7 +629,7 @@ public class RxFit {
         }
 
         private static Single<Status> startInternal(Session session, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new SessionStartSingle(RxFit.get(), session, timeout, timeUnit));
+            return Single.create(new SessionStartSingle(RxGoogle.get(), session, timeout, timeUnit));
         }
 
         // stop
@@ -646,7 +643,7 @@ public class RxFit {
         }
 
         private static Observable<Session> stopInternal(String identifier, Long timeout, TimeUnit timeUnit) {
-            return Single.create(new SessionStopSingle(RxFit.get(), identifier, timeout, timeUnit)).flatMapObservable(new Func1<List<Session>, Observable<? extends Session>>() {
+            return Single.create(new SessionStopSingle(RxGoogle.get(), identifier, timeout, timeUnit)).flatMapObservable(new Func1<List<Session>, Observable<? extends Session>>() {
                 @Override
                 public Observable<? extends Session> call(List<Session> sessions) {
                     return Observable.from(sessions);
@@ -660,11 +657,11 @@ public class RxFit {
 
     public static class Components {
 
-        public static <T extends BaseObservable<R>, R> Observable<R> create(Func1<RxFit, T> constructor) {
+        public static <T extends BaseObservable<R>, R> Observable<R> create(Func1<RxGoogle, T> constructor) {
             return Observable.create(constructor.call(get()));
         }
 
-        public static <T extends BaseSingle<R>, R> Single<R> createSingle(Func1<RxFit, T> constructor) {
+        public static <T extends BaseSingle<R>, R> Single<R> createSingle(Func1<RxGoogle, T> constructor) {
             return Single.create(constructor.call(get()));
         }
     }
@@ -672,7 +669,7 @@ public class RxFit {
 
     /* Transformer that behaves like onExceptionResumeNext(Observable o), but propagates
      * a GoogleAPIConnectionException, which was caused by an unsuccessful resolution.
-     * This can be helpful if you want to resume with another RxFit Observable when
+     * This can be helpful if you want to resume with another RxGoogle Observable when
      * an Exception occurs, but don't want to show the resolution dialog multiple times.
      *
      * An example use case: Fetch fitness data with server queries enabled, but provide

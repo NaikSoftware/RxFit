@@ -30,7 +30,7 @@ public class ConfigCreateCustomDataTypeSingle extends BaseSingle<DataType> {
 
     private final DataTypeCreateRequest dataTypeCreateRequest;
 
-    ConfigCreateCustomDataTypeSingle(RxFit rxFit, DataTypeCreateRequest dataTypeCreateRequest, Long timeout, TimeUnit timeUnit) {
+    ConfigCreateCustomDataTypeSingle(RxGoogle rxFit, DataTypeCreateRequest dataTypeCreateRequest, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataTypeCreateRequest = dataTypeCreateRequest;
     }

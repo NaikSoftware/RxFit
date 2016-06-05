@@ -27,7 +27,7 @@ public class SessionUnregisterSingle extends BaseSingle<Status> {
 
     private final PendingIntent pendingIntent;
 
-    SessionUnregisterSingle(RxFit rxFit, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
+    SessionUnregisterSingle(RxGoogle rxFit, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.pendingIntent = pendingIntent;
     }

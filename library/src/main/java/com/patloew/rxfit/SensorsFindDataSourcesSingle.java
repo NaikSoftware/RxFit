@@ -33,7 +33,7 @@ public class SensorsFindDataSourcesSingle extends BaseSingle<List<DataSource>> {
     private final DataSourcesRequest dataSourcesRequest;
     private final DataType dataType;
 
-    SensorsFindDataSourcesSingle(RxFit rxFit, DataSourcesRequest dataSourcesRequest, DataType dataType, Long timeout, TimeUnit timeUnit) {
+    SensorsFindDataSourcesSingle(RxGoogle rxFit, DataSourcesRequest dataSourcesRequest, DataType dataType, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataSourcesRequest = dataSourcesRequest;
         this.dataType = dataType;

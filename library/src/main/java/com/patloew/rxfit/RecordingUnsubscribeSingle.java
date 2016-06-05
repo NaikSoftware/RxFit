@@ -31,7 +31,7 @@ public class RecordingUnsubscribeSingle extends BaseSingle<Status> {
     private final DataType dataType;
     private final Subscription subscription;
 
-    RecordingUnsubscribeSingle(RxFit rxFit, DataSource dataSource, DataType dataType, Subscription subscription, Long timeout, TimeUnit timeUnit) {
+    RecordingUnsubscribeSingle(RxGoogle rxFit, DataSource dataSource, DataType dataType, Subscription subscription, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataSource = dataSource;
         this.dataType = dataType;

@@ -29,7 +29,7 @@ public class HistoryReadDataSingle extends BaseSingle<DataReadResult> {
 
     private final DataReadRequest dataReadRequest;
 
-    HistoryReadDataSingle(RxFit rxFit, DataReadRequest dataReadRequest, Long timeout, TimeUnit timeUnit) {
+    HistoryReadDataSingle(RxGoogle rxFit, DataReadRequest dataReadRequest, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataReadRequest = dataReadRequest;
     }

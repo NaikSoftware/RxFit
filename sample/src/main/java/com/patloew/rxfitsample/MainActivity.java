@@ -22,7 +22,7 @@ import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
-import com.patloew.rxfit.RxFit;
+import com.patloew.rxfit.RxGoogle;
 import com.patloew.rxfit.StatusException;
 
 import java.text.SimpleDateFormat;
@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        RxFit.init(this, new Api[] { Fitness.SESSIONS_API, Fitness.HISTORY_API }, new Scope[] { new Scope(Scopes.FITNESS_ACTIVITY_READ) });
-        RxFit.setDefaultTimeout(15, TimeUnit.SECONDS);
+        RxGoogle.init(this, new Api[] { Fitness.SESSIONS_API, Fitness.HISTORY_API }, new Scope[] { new Scope(Scopes.FITNESS_ACTIVITY_READ) });
+        RxGoogle.setDefaultTimeout(15, TimeUnit.SECONDS);
 
         getFitnessData();
     }
@@ -88,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
 
         // First, request all data from the server. If there is an error (e.g. timeout),
         // switch to normal request
-        subscription = RxFit.History.read(dataReadRequestServer)
+        subscription = RxGoogle.History.read(dataReadRequestServer)
                 .doOnError(throwable -> { if(throwable instanceof StatusException && ((StatusException)throwable).getStatus().getStatusCode() == CommonStatusCodes.TIMEOUT) Log.e("MainActivity", "Timeout on server query request"); })
-                .compose(RxFit.OnExceptionResumeNext.with(RxFit.History.read(dataReadRequest)))
+                .compose(RxGoogle.OnExceptionResumeNext.with(RxGoogle.History.read(dataReadRequest)))
                 .flatMapObservable(dataReadResult -> Observable.from(dataReadResult.getBuckets()))
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())

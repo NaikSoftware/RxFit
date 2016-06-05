@@ -27,7 +27,7 @@ public class SessionRegisterSingle extends BaseSingle<Status> {
 
     private final PendingIntent pendingIntent;
 
-    SessionRegisterSingle(RxFit rxFit, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
+    SessionRegisterSingle(RxGoogle rxFit, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.pendingIntent = pendingIntent;
     }

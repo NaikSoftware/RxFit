@@ -44,7 +44,7 @@ public abstract class BaseSingle<T> extends BaseRx<T> implements Single.OnSubscr
 
     private final HashMap<GoogleApiClient, SingleSubscriber<? super T>> subscriptionInfoHashMap = new HashMap<>();
 
-    protected BaseSingle(@NonNull RxFit rxFit, Long timeout, TimeUnit timeUnit) {
+    protected BaseSingle(@NonNull RxGoogle rxFit, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         handleResolution = true;
     }

@@ -26,7 +26,7 @@ public class SessionStartSingle extends BaseSingle<Status> {
 
     private final Session session;
 
-    SessionStartSingle(RxFit rxFit, Session session, Long timeout, TimeUnit timeUnit) {
+    SessionStartSingle(RxGoogle rxFit, Session session, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.session = session;
     }

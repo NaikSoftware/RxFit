@@ -29,7 +29,7 @@ public class ConfigReadDataTypeSingle extends BaseSingle<DataType> {
 
     private final String dataTypeName;
 
-    ConfigReadDataTypeSingle(RxFit rxFit, String dataTypeName, Long timeout, TimeUnit timeUnit) {
+    ConfigReadDataTypeSingle(RxGoogle rxFit, String dataTypeName, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataTypeName = dataTypeName;
     }

@@ -32,7 +32,7 @@ public class SensorsDataPointObservable extends BaseObservable<DataPoint> {
     private final SensorRequest sensorRequest;
     private OnDataPointListener dataPointListener = null;
 
-    SensorsDataPointObservable(RxFit rxFit, SensorRequest sensorRequest, Long timeout, TimeUnit timeUnit) {
+    SensorsDataPointObservable(RxGoogle rxFit, SensorRequest sensorRequest, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.sensorRequest = sensorRequest;
     }

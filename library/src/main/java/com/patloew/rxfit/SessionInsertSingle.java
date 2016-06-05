@@ -26,7 +26,7 @@ public class SessionInsertSingle extends BaseSingle<Status> {
 
     private final SessionInsertRequest sessionInsertRequest;
 
-    SessionInsertSingle(RxFit rxFit, SessionInsertRequest sessionInsertRequest, Long timeout, TimeUnit timeUnit) {
+    SessionInsertSingle(RxGoogle rxFit, SessionInsertRequest sessionInsertRequest, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.sessionInsertRequest = sessionInsertRequest;
     }
