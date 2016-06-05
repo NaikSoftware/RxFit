@@ -3,10 +3,10 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.patloew.rxfitsample"
+        applicationId "ua.naiksoftware.rxgooglesample"
         minSdkVersion 9
         targetSdkVersion 23
         versionCode 1
