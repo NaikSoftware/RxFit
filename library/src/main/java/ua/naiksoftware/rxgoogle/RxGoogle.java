@@ -25,6 +25,7 @@ import com.google.android.gms.fitness.request.SessionInsertRequest;
 import com.google.android.gms.fitness.request.SessionReadRequest;
 import com.google.android.gms.fitness.result.DataReadResult;
 import com.google.android.gms.fitness.result.SessionReadResult;
+import com.google.android.gms.location.LocationRequest;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +35,7 @@ import rx.Observable;
 import rx.Single;
 import rx.exceptions.Exceptions;
 import rx.functions.Func1;
+import ua.naiksoftware.rxgoogle.location.LocationReceiverObservable;
 
 /* Copyright 2016 Patrick Löwenstein, Nickolay Savchenko
  *
@@ -669,6 +671,24 @@ public class RxGoogle {
 
         }
 
+    }
+
+    public static class Location {
+
+        private Location() {}
+
+        public static class Fused {
+
+            private Fused() {}
+
+            public static Observable<android.location.Location> requestLocation(LocationRequest locationRequest) {
+                return requestLocation(locationRequest, null, null);
+            }
+
+            public static Observable<android.location.Location> requestLocation(LocationRequest locationRequest, Long timeout, TimeUnit timeUnit) {
+                return Observable.create(new LocationReceiverObservable(get(), locationRequest, timeout, timeUnit));
+            }
+        }
     }
 
 
