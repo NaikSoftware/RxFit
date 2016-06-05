@@ -1,5 +1,7 @@
 # Reactive Google API Library for Android
 
+[![Release](https://jitpack.io/v/NaikSoftware/RxGoogle.svg)](https://jitpack.io/#NaikSoftware/RxGoogle)
+
 This library wraps the Google API in [RxJava](https://github.com/ReactiveX/RxJava) Observables and Singles. No more managing GoogleApiClients! Also, the authorization process handled by the lib.
 
 # Usage
@@ -58,7 +60,7 @@ The lib is available on JitPack. Add the following to your `build.gradle`:
     }
 	
 	dependencies {
-	    compile 'com.github.NaikSoftware:RxFit:1.2.4'
+	    compile 'com.github.NaikSoftware:RxFit:{latest version}'
 	}
 
 # Credits
