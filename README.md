@@ -48,7 +48,7 @@ A basic sample app is available in the `sample` project. You need to create an O
 
 # Setup
 
-The lib is available on jCenter. Add the following to your `build.gradle`:
+The lib is available on JitPack. Add the following to your `build.gradle`:
 
 	allprojects {
     	repositories {
