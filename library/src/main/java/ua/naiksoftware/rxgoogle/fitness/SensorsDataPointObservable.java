@@ -1,4 +1,4 @@
-package ua.naiksoftware.rxgoogle;
+package ua.naiksoftware.rxgoogle.fitness;
 
 import android.support.annotation.NonNull;
 
@@ -13,6 +13,9 @@ import com.google.android.gms.fitness.request.SensorRequest;
 import java.util.concurrent.TimeUnit;
 
 import rx.Subscriber;
+import ua.naiksoftware.rxgoogle.BaseObservable;
+import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusException;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -32,7 +35,7 @@ public class SensorsDataPointObservable extends BaseObservable<DataPoint> {
     private final SensorRequest sensorRequest;
     private OnDataPointListener dataPointListener = null;
 
-    SensorsDataPointObservable(RxGoogle rxFit, SensorRequest sensorRequest, Long timeout, TimeUnit timeUnit) {
+    public SensorsDataPointObservable(RxGoogle rxFit, SensorRequest sensorRequest, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.sensorRequest = sensorRequest;
     }

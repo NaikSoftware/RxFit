@@ -1,4 +1,4 @@
-package ua.naiksoftware.rxgoogle;
+package ua.naiksoftware.rxgoogle.fitness;
 
 import android.support.annotation.NonNull;
 
@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.SingleSubscriber;
+import ua.naiksoftware.rxgoogle.BaseSingle;
+import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusException;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -33,7 +36,7 @@ public class SensorsFindDataSourcesSingle extends BaseSingle<List<DataSource>> {
     private final DataSourcesRequest dataSourcesRequest;
     private final DataType dataType;
 
-    SensorsFindDataSourcesSingle(RxGoogle rxFit, DataSourcesRequest dataSourcesRequest, DataType dataType, Long timeout, TimeUnit timeUnit) {
+    public SensorsFindDataSourcesSingle(RxGoogle rxFit, DataSourcesRequest dataSourcesRequest, DataType dataType, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataSourcesRequest = dataSourcesRequest;
         this.dataType = dataType;

@@ -1,15 +1,17 @@
-package ua.naiksoftware.rxgoogle;
-
-import android.app.PendingIntent;
+package ua.naiksoftware.rxgoogle.fitness;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.request.SensorRequest;
+import com.google.android.gms.fitness.data.BleDevice;
 
 import java.util.concurrent.TimeUnit;
 
 import rx.SingleSubscriber;
+import ua.naiksoftware.rxgoogle.BaseSingle;
+import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusResultCallBack;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -24,19 +26,25 @@ import rx.SingleSubscriber;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. */
-public class SensorsAddDataPointIntentSingle extends BaseSingle<Status> {
+public class BleUnclaimDeviceSingle extends BaseSingle<Status> {
 
-    private final SensorRequest sensorRequest;
-    private final PendingIntent pendingIntent;
+    private final BleDevice bleDevice;
+    private final String deviceAddress;
 
-    SensorsAddDataPointIntentSingle(RxGoogle rxFit, SensorRequest sensorRequest, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
+    public BleUnclaimDeviceSingle(RxGoogle rxFit, BleDevice bleDevice, String deviceAddress, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
-        this.sensorRequest = sensorRequest;
-        this.pendingIntent = pendingIntent;
+        this.bleDevice = bleDevice;
+        this.deviceAddress = deviceAddress;
     }
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super Status> subscriber) {
-        setupFitnessPendingResult(Fitness.SensorsApi.add(apiClient, sensorRequest, pendingIntent), new StatusResultCallBack(subscriber));
+        ResultCallback<Status> resultCallback = new StatusResultCallBack(subscriber);
+
+        if(bleDevice != null) {
+            setupFitnessPendingResult(Fitness.BleApi.unclaimBleDevice(apiClient, bleDevice), resultCallback);
+        } else {
+            setupFitnessPendingResult(Fitness.BleApi.unclaimBleDevice(apiClient, deviceAddress), resultCallback);
+        }
     }
 }

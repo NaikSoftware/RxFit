@@ -1,4 +1,4 @@
-package ua.naiksoftware.rxgoogle;
+package ua.naiksoftware.rxgoogle.fitness;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresPermission;
@@ -15,6 +15,9 @@ import com.google.android.gms.fitness.request.StartBleScanRequest;
 import java.util.concurrent.TimeUnit;
 
 import rx.Subscriber;
+import ua.naiksoftware.rxgoogle.BaseObservable;
+import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusException;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -37,7 +40,7 @@ public class BleScanObservable extends BaseObservable<BleDevice> {
     private BleScanCallback bleScanCallback;
 
     @RequiresPermission("android.permission.BLUETOOTH_ADMIN")
-    BleScanObservable(RxGoogle rxFit, DataType[] dataTypes, Integer stopTimeSecs, Long timeout, TimeUnit timeUnit) {
+    public BleScanObservable(RxGoogle rxFit, DataType[] dataTypes, Integer stopTimeSecs, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataTypes = dataTypes;
         this.stopTimeSecs = stopTimeSecs;

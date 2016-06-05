@@ -35,7 +35,32 @@ import rx.Observable;
 import rx.Single;
 import rx.exceptions.Exceptions;
 import rx.functions.Func1;
+import ua.naiksoftware.rxgoogle.fitness.BleClaimDeviceSingle;
+import ua.naiksoftware.rxgoogle.fitness.BleListClaimedDevicesSingle;
+import ua.naiksoftware.rxgoogle.fitness.BleScanObservable;
+import ua.naiksoftware.rxgoogle.fitness.BleUnclaimDeviceSingle;
+import ua.naiksoftware.rxgoogle.fitness.ConfigCreateCustomDataTypeSingle;
+import ua.naiksoftware.rxgoogle.fitness.ConfigDisableFitSingle;
+import ua.naiksoftware.rxgoogle.fitness.ConfigReadDataTypeSingle;
+import ua.naiksoftware.rxgoogle.fitness.HistoryDeleteDataSingle;
+import ua.naiksoftware.rxgoogle.fitness.HistoryInsertDataSingle;
+import ua.naiksoftware.rxgoogle.fitness.HistoryReadDailyTotalSingle;
+import ua.naiksoftware.rxgoogle.fitness.HistoryReadDataSingle;
+import ua.naiksoftware.rxgoogle.fitness.HistoryUpdateDataSingle;
 import ua.naiksoftware.rxgoogle.location.LocationReceiverObservable;
+import ua.naiksoftware.rxgoogle.fitness.RecordingListSubscriptionsSingle;
+import ua.naiksoftware.rxgoogle.fitness.RecordingSubscribeSingle;
+import ua.naiksoftware.rxgoogle.fitness.RecordingUnsubscribeSingle;
+import ua.naiksoftware.rxgoogle.fitness.SensorsAddDataPointIntentSingle;
+import ua.naiksoftware.rxgoogle.fitness.SensorsDataPointObservable;
+import ua.naiksoftware.rxgoogle.fitness.SensorsFindDataSourcesSingle;
+import ua.naiksoftware.rxgoogle.fitness.SensorsRemoveDataPointIntentSingle;
+import ua.naiksoftware.rxgoogle.fitness.SessionInsertSingle;
+import ua.naiksoftware.rxgoogle.fitness.SessionReadSingle;
+import ua.naiksoftware.rxgoogle.fitness.SessionRegisterSingle;
+import ua.naiksoftware.rxgoogle.fitness.SessionStartSingle;
+import ua.naiksoftware.rxgoogle.fitness.SessionStopSingle;
+import ua.naiksoftware.rxgoogle.fitness.SessionUnregisterSingle;
 
 /* Copyright 2016 Patrick Löwenstein, Nickolay Savchenko
  *

@@ -1,4 +1,4 @@
-package ua.naiksoftware.rxgoogle;
+package ua.naiksoftware.rxgoogle.fitness;
 
 import android.support.annotation.NonNull;
 
@@ -12,6 +12,9 @@ import com.google.android.gms.fitness.result.DailyTotalResult;
 import java.util.concurrent.TimeUnit;
 
 import rx.SingleSubscriber;
+import ua.naiksoftware.rxgoogle.BaseSingle;
+import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusException;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -30,7 +33,7 @@ public class HistoryReadDailyTotalSingle extends BaseSingle<DataSet> {
 
     private final DataType dataType;
 
-    HistoryReadDailyTotalSingle(RxGoogle rxFit, DataType dataType, Long timeout, TimeUnit timeUnit) {
+    public HistoryReadDailyTotalSingle(RxGoogle rxFit, DataType dataType, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataType = dataType;
     }

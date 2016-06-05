@@ -1,4 +1,4 @@
-package ua.naiksoftware.rxgoogle;
+package ua.naiksoftware.rxgoogle.fitness;
 
 import android.support.annotation.NonNull;
 
@@ -12,6 +12,9 @@ import com.google.android.gms.fitness.result.DataTypeResult;
 import java.util.concurrent.TimeUnit;
 
 import rx.SingleSubscriber;
+import ua.naiksoftware.rxgoogle.BaseSingle;
+import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusException;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -30,7 +33,7 @@ public class ConfigCreateCustomDataTypeSingle extends BaseSingle<DataType> {
 
     private final DataTypeCreateRequest dataTypeCreateRequest;
 
-    ConfigCreateCustomDataTypeSingle(RxGoogle rxFit, DataTypeCreateRequest dataTypeCreateRequest, Long timeout, TimeUnit timeUnit) {
+    public ConfigCreateCustomDataTypeSingle(RxGoogle rxFit, DataTypeCreateRequest dataTypeCreateRequest, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataTypeCreateRequest = dataTypeCreateRequest;
     }

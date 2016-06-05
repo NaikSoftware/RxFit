@@ -1,4 +1,4 @@
-package ua.naiksoftware.rxgoogle;
+package ua.naiksoftware.rxgoogle.fitness;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -6,11 +6,13 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
-import com.google.android.gms.fitness.data.Subscription;
 
 import java.util.concurrent.TimeUnit;
 
 import rx.SingleSubscriber;
+import ua.naiksoftware.rxgoogle.BaseSingle;
+import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusResultCallBack;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -25,17 +27,15 @@ import rx.SingleSubscriber;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. */
-public class RecordingUnsubscribeSingle extends BaseSingle<Status> {
+public class RecordingSubscribeSingle extends BaseSingle<Status> {
 
     private final DataSource dataSource;
     private final DataType dataType;
-    private final Subscription subscription;
 
-    RecordingUnsubscribeSingle(RxGoogle rxFit, DataSource dataSource, DataType dataType, Subscription subscription, Long timeout, TimeUnit timeUnit) {
+    public RecordingSubscribeSingle(RxGoogle rxFit, DataSource dataSource, DataType dataType, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.dataSource = dataSource;
         this.dataType = dataType;
-        this.subscription = subscription;
     }
 
     @Override
@@ -43,11 +43,9 @@ public class RecordingUnsubscribeSingle extends BaseSingle<Status> {
         ResultCallback<Status> resultCallback = new StatusResultCallBack(subscriber);
 
         if(dataSource != null) {
-            setupFitnessPendingResult(Fitness.RecordingApi.unsubscribe(apiClient, dataSource), resultCallback);
-        } else if(dataType != null) {
-            setupFitnessPendingResult(Fitness.RecordingApi.unsubscribe(apiClient, dataType), resultCallback);
+            setupFitnessPendingResult(Fitness.RecordingApi.subscribe(apiClient, dataSource), resultCallback);
         } else {
-            setupFitnessPendingResult(Fitness.RecordingApi.unsubscribe(apiClient, subscription), resultCallback);
+            setupFitnessPendingResult(Fitness.RecordingApi.subscribe(apiClient, dataType), resultCallback);
         }
     }
 }

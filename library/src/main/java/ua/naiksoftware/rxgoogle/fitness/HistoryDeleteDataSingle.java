@@ -1,13 +1,16 @@
-package ua.naiksoftware.rxgoogle;
+package ua.naiksoftware.rxgoogle.fitness;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.request.DataDeleteRequest;
 
 import java.util.concurrent.TimeUnit;
 
 import rx.SingleSubscriber;
+import ua.naiksoftware.rxgoogle.BaseSingle;
+import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusResultCallBack;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -22,17 +25,17 @@ import rx.SingleSubscriber;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. */
-public class HistoryInsertDataSingle extends BaseSingle<Status> {
+public class HistoryDeleteDataSingle extends BaseSingle<Status> {
 
-    private final DataSet dataSet;
+    private final DataDeleteRequest dataDeleteRequest;
 
-    HistoryInsertDataSingle(RxGoogle rxFit, DataSet dataSet, Long timeout, TimeUnit timeUnit) {
+    public HistoryDeleteDataSingle(RxGoogle rxFit, DataDeleteRequest dataDeleteRequest, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
-        this.dataSet = dataSet;
+        this.dataDeleteRequest = dataDeleteRequest;
     }
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super Status> subscriber) {
-        setupFitnessPendingResult(Fitness.HistoryApi.insertData(apiClient, dataSet), new StatusResultCallBack(subscriber));
+        setupFitnessPendingResult(Fitness.HistoryApi.deleteData(apiClient, dataDeleteRequest), new StatusResultCallBack(subscriber));
     }
 }

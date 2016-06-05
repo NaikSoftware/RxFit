@@ -1,4 +1,4 @@
-package ua.naiksoftware.rxgoogle;
+package ua.naiksoftware.rxgoogle.fitness;
 
 import android.app.PendingIntent;
 
@@ -9,6 +9,9 @@ import com.google.android.gms.fitness.Fitness;
 import java.util.concurrent.TimeUnit;
 
 import rx.SingleSubscriber;
+import ua.naiksoftware.rxgoogle.BaseSingle;
+import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusResultCallBack;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -27,7 +30,7 @@ public class SensorsRemoveDataPointIntentSingle extends BaseSingle<Status> {
 
     private final PendingIntent pendingIntent;
 
-    SensorsRemoveDataPointIntentSingle(RxGoogle rxFit, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
+    public SensorsRemoveDataPointIntentSingle(RxGoogle rxFit, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
         this.pendingIntent = pendingIntent;
     }

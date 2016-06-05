@@ -1,13 +1,17 @@
-package ua.naiksoftware.rxgoogle;
+package ua.naiksoftware.rxgoogle.fitness;
+
+import android.app.PendingIntent;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.request.SessionInsertRequest;
 
 import java.util.concurrent.TimeUnit;
 
 import rx.SingleSubscriber;
+import ua.naiksoftware.rxgoogle.BaseSingle;
+import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusResultCallBack;
 
 /* Copyright 2016 Patrick Löwenstein
  *
@@ -22,17 +26,17 @@ import rx.SingleSubscriber;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License. */
-public class SessionInsertSingle extends BaseSingle<Status> {
+public class SessionUnregisterSingle extends BaseSingle<Status> {
 
-    private final SessionInsertRequest sessionInsertRequest;
+    private final PendingIntent pendingIntent;
 
-    SessionInsertSingle(RxGoogle rxFit, SessionInsertRequest sessionInsertRequest, Long timeout, TimeUnit timeUnit) {
+    public SessionUnregisterSingle(RxGoogle rxFit, PendingIntent pendingIntent, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
-        this.sessionInsertRequest = sessionInsertRequest;
+        this.pendingIntent = pendingIntent;
     }
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super Status> subscriber) {
-        setupFitnessPendingResult(Fitness.SessionsApi.insertSession(apiClient, sessionInsertRequest), new StatusResultCallBack(subscriber));
+        setupFitnessPendingResult(Fitness.SessionsApi.unregisterForSessions(apiClient, pendingIntent), new StatusResultCallBack(subscriber));
     }
 }
