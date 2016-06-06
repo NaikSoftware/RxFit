@@ -47,6 +47,7 @@ import ua.naiksoftware.rxgoogle.fitness.HistoryInsertDataSingle;
 import ua.naiksoftware.rxgoogle.fitness.HistoryReadDailyTotalSingle;
 import ua.naiksoftware.rxgoogle.fitness.HistoryReadDataSingle;
 import ua.naiksoftware.rxgoogle.fitness.HistoryUpdateDataSingle;
+import ua.naiksoftware.rxgoogle.location.LastLocationReceiverObservable;
 import ua.naiksoftware.rxgoogle.location.LocationReceiverObservable;
 import ua.naiksoftware.rxgoogle.fitness.RecordingListSubscriptionsSingle;
 import ua.naiksoftware.rxgoogle.fitness.RecordingSubscribeSingle;
@@ -712,6 +713,10 @@ public class RxGoogle {
 
             public static Observable<android.location.Location> requestLocation(LocationRequest locationRequest, Long timeout, TimeUnit timeUnit) {
                 return Observable.create(new LocationReceiverObservable(get(), locationRequest, timeout, timeUnit));
+            }
+
+            public static Single<android.location.Location> last() {
+                return Single.create(new LastLocationReceiverObservable(get(), null, null));
             }
         }
     }
