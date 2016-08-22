@@ -2,8 +2,10 @@ package ua.naiksoftware.rxgoogle;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -129,13 +131,24 @@ public abstract class BaseRx<T> {
     }
 
     protected void requestPermissions(ArrayList<String> permissions, SubscriberWrapper subscriber) {
-        int requestCode = hashCode();
-        observablePermissionsHandlers.put(requestCode, new Pair<BaseRx, SubscriberWrapper>(BaseRx.this, subscriber));
-        Intent intent = new Intent(ctx, ResolutionActivity.class);
-        intent.putExtra(ResolutionActivity.ARG_PERMISSIONS_REQUEST_CODE, requestCode);
-        intent.putStringArrayListExtra(ResolutionActivity.ARG_PERMISSIONS_LIST, permissions);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ctx.startActivity(intent);
+        List<String> missingPermissions = new ArrayList<>(permissions.size());
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(ctx, permission) != PackageManager.PERMISSION_GRANTED) {
+                missingPermissions.add(permission);
+            }
+        }
+        int count = missingPermissions.size();
+        if (count > 0) {
+            int requestCode = hashCode();
+            observablePermissionsHandlers.put(requestCode, new Pair<BaseRx, SubscriberWrapper>(BaseRx.this, subscriber));
+            Intent intent = new Intent(ctx, ResolutionActivity.class);
+            intent.putExtra(ResolutionActivity.ARG_PERMISSIONS_REQUEST_CODE, requestCode);
+            intent.putStringArrayListExtra(ResolutionActivity.ARG_PERMISSIONS_LIST, permissions);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ctx.startActivity(intent);
+        } else {
+            handlePermissionsResult(permissions, permissions, subscriber);
+        }
     }
 
     static final void onPermissionsResult(int code, List<String> requestedPermissions, List<String> grantedPermissions) {

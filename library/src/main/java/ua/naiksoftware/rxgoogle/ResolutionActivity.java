@@ -67,16 +67,9 @@ public class ResolutionActivity extends Activity {
                 setPermissionsResultAndFinish(permissions, permissions);
                 return;
             }
-            Context baseContext = getApplicationContext();
-            List<String> missingPermissions = new ArrayList<>(permissions.size());
-            for (String permission : permissions) {
-                if (ContextCompat.checkSelfPermission(baseContext, permission) != PackageManager.PERMISSION_GRANTED) {
-                    missingPermissions.add(permission);
-                }
-            }
-            int count = missingPermissions.size();
-            if (count > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(missingPermissions.toArray(new String[count]), REQUEST_CODE_PERMISSIONS);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_PERMISSIONS);
             }
         } else { // Resolve resolution for google api client
             try {
