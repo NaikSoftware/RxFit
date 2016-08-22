@@ -3,6 +3,7 @@ package ua.naiksoftware.rxgoogle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -12,6 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +48,7 @@ public abstract class BaseSingle<T> extends BaseRx<T> implements Single.OnSubscr
     private final boolean handleResolution;
 
     private final HashMap<GoogleApiClient, SingleSubscriber<? super T>> subscriptionInfoHashMap = new HashMap<>();
+    private GoogleApiClient apiClient;
 
     protected BaseSingle(@NonNull RxGoogle rxFit, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
@@ -59,7 +62,7 @@ public abstract class BaseSingle<T> extends BaseRx<T> implements Single.OnSubscr
 
     @Override
     public final void call(SingleSubscriber<? super T> subscriber) {
-        final GoogleApiClient apiClient = createApiClient(new ApiClientConnectionCallbacks(subscriber));
+        apiClient = createApiClient(new ApiClientConnectionCallbacks(subscriber));
         subscriptionInfoHashMap.put(apiClient, subscriber);
 
         try {
@@ -84,8 +87,14 @@ public abstract class BaseSingle<T> extends BaseRx<T> implements Single.OnSubscr
     protected abstract void onGoogleApiClientReady(GoogleApiClient apiClient, SingleSubscriber<? super T> subscriber);
 
     @Override
-    protected void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions, Subscriber subscriber) {
-
+    protected void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions, SubscriberWrapper subscriberWrapper) {
+        SingleSubscriber subscriber =  subscriberWrapper.getSingleSubscriber();
+        if (grantedPermissions != null && grantedPermissions.size() > 0 ) {
+            onGoogleApiClientReady(apiClient, subscriber);
+        } else {
+            if (grantedPermissions != null) requestedPermissions.removeAll(grantedPermissions);
+            subscriber.onError(new PermissionSecurityException("Permissions not granted: " + Arrays.toString(requestedPermissions.toArray())));
+        }
     }
 
     protected final void handleResolutionResult(int resultCode, ConnectionResult connectionResult) {
@@ -117,7 +126,12 @@ public abstract class BaseSingle<T> extends BaseRx<T> implements Single.OnSubscr
         @Override
         public void onConnected(Bundle bundle) {
             try {
-                onGoogleApiClientReady(apiClient, subscriber);
+                ArrayList<String> requiredPermissions = getRequiredPermissions();
+                if (requiredPermissions == null || requiredPermissions.isEmpty() || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                    onGoogleApiClientReady(apiClient, subscriber);
+                } else {
+                    requestPermissions(requiredPermissions, new SubscriberWrapper(subscriber));
+                }
             } catch (Throwable ex) {
                 subscriber.onError(ex);
             }

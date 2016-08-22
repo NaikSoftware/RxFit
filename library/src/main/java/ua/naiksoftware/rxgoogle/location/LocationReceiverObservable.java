@@ -1,6 +1,7 @@
 package ua.naiksoftware.rxgoogle.location;
 
 import android.Manifest;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -8,10 +9,17 @@ import android.support.annotation.RequiresPermission;
 import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import rx.Subscriber;
@@ -31,20 +39,17 @@ public class LocationReceiverObservable extends BaseObservable<Location> {
         mLocationRequest = locationRequest;
     }
 
+    @Override
+    protected ArrayList<String> getRequiredPermissions() {
+        ArrayList<String> permissions = new ArrayList<>();
+        permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        return permissions;
+    }
+
     @RequiresPermission("android.permission.ACCESS_FINE_LOCATION")
     @Override
-    protected void onGoogleApiClientReady(GoogleApiClient apiClient, final Subscriber<? super Location> subscriber) {
-        if (ActivityCompat.checkSelfPermission(apiClient.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(apiClient.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            subscriber.onError(new SecurityException("Location permissions not granted"));
-            return;
-        }
+    protected void onGoogleApiClientReady(final GoogleApiClient apiClient, final Subscriber<? super Location> subscriber) {
 
         mLocationListener = new LocationListener() {
             @Override
@@ -53,7 +58,43 @@ public class LocationReceiverObservable extends BaseObservable<Location> {
             }
         };
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, mLocationRequest, mLocationListener);
+        LocationSettingsRequest locationSettingsRequest = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest)
+                .build();
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(apiClient, locationSettingsRequest);
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
+                final Status status = locationSettingsResult.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // Unnecessary check
+                        if (ActivityCompat.checkSelfPermission(apiClient.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(apiClient.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            subscriber.onError(new SecurityException("Location permissions not granted"));
+                            return;
+                        }
+                        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, mLocationRequest, mLocationListener);
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(null, 1 /*request code*/);
+                        } catch (IntentSender.SendIntentException e) {
+                            subscriber.onError(e);
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way
+                        // to fix the settings so we won't show the dialog.
+                        break;
+                }
+
+            }
+        });
     }
 
     @Override

@@ -47,7 +47,7 @@ import rx.Subscriber;
 public abstract class BaseRx<T> {
 
     protected static final Set<BaseRx> observableSet = new HashSet<>();
-    protected static final Map<Integer, Pair<BaseRx, Subscriber>> observablePermissionsHandlers = new HashMap<>();
+    protected static final Map<Integer, Pair<BaseRx, SubscriberWrapper>> observablePermissionsHandlers = new HashMap<>();
 
     protected final Context ctx;
     private final Api<? extends Api.ApiOptions.NotRequiredOptions>[] services;
@@ -119,7 +119,7 @@ public abstract class BaseRx<T> {
         return null;
     }
 
-    protected abstract void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions, Subscriber subscriber);
+    protected abstract void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions, SubscriberWrapper subscriber);
 
     static final void onResolutionResult(int resultCode, ConnectionResult connectionResult) {
         for (BaseRx observable : observableSet) {
@@ -128,9 +128,9 @@ public abstract class BaseRx<T> {
         observableSet.clear();
     }
 
-    protected void requestPermissions(ArrayList<String> permissions, Subscriber subscriber) {
+    protected void requestPermissions(ArrayList<String> permissions, SubscriberWrapper subscriber) {
         int requestCode = hashCode();
-        observablePermissionsHandlers.put(requestCode, new Pair<BaseRx, Subscriber>(BaseRx.this, subscriber));
+        observablePermissionsHandlers.put(requestCode, new Pair<BaseRx, SubscriberWrapper>(BaseRx.this, subscriber));
         Intent intent = new Intent(ctx, ResolutionActivity.class);
         intent.putExtra(ResolutionActivity.ARG_PERMISSIONS_REQUEST_CODE, requestCode);
         intent.putStringArrayListExtra(ResolutionActivity.ARG_PERMISSIONS_LIST, permissions);
@@ -139,7 +139,7 @@ public abstract class BaseRx<T> {
     }
 
     static final void onPermissionsResult(int code, List<String> requestedPermissions, List<String> grantedPermissions) {
-        Pair<BaseRx, Subscriber> pair = observablePermissionsHandlers.get(code);
+        Pair<BaseRx, SubscriberWrapper> pair = observablePermissionsHandlers.get(code);
         if (pair != null && !pair.second.isUnsubscribed()) {
             pair.first.handlePermissionsResult(requestedPermissions, grantedPermissions, pair.second);
             observablePermissionsHandlers.remove(code);

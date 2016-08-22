@@ -103,7 +103,8 @@ public abstract class BaseObservable<T> extends BaseRx<T> implements Observable.
     }
 
     @Override
-    protected void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions, Subscriber subscriber) {
+    protected void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions, SubscriberWrapper subscriberWrapper) {
+        Subscriber subscriber =  subscriberWrapper.getSubscriber();
         if (grantedPermissions != null && grantedPermissions.size() > 0 ) {
             onGoogleApiClientReady(apiClient, subscriber);
         } else {
@@ -129,7 +130,7 @@ public abstract class BaseObservable<T> extends BaseRx<T> implements Observable.
                 if (requiredPermissions == null || requiredPermissions.isEmpty() || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     onGoogleApiClientReady(apiClient, subscriber);
                 } else {
-                    requestPermissions(requiredPermissions, subscriber);
+                    requestPermissions(requiredPermissions, new SubscriberWrapper(subscriber));
                 }
             } catch (Throwable ex) {
                 subscriber.onError(ex);
