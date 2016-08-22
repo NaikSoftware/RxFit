@@ -3,6 +3,7 @@ package ua.naiksoftware.rxgoogle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -11,7 +12,10 @@ import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -40,9 +44,11 @@ import rx.subscriptions.Subscriptions;
  *
  */
 public abstract class BaseObservable<T> extends BaseRx<T> implements Observable.OnSubscribe<T> {
+
     private final boolean handleResolution;
 
     private final HashMap<GoogleApiClient, Subscriber<? super T>> subscriptionInfoHashMap = new HashMap<>();
+    private GoogleApiClient apiClient;
 
     protected BaseObservable(@NonNull RxGoogle rxFit, Long timeout, TimeUnit timeUnit) {
         super(rxFit, timeout, timeUnit);
@@ -56,7 +62,7 @@ public abstract class BaseObservable<T> extends BaseRx<T> implements Observable.
 
     @Override
     public final void call(Subscriber<? super T> subscriber) {
-        final GoogleApiClient apiClient = createApiClient(new ApiClientConnectionCallbacks(subscriber));
+        apiClient = createApiClient(new ApiClientConnectionCallbacks(subscriber));
         subscriptionInfoHashMap.put(apiClient, subscriber);
 
         try {
@@ -96,6 +102,16 @@ public abstract class BaseObservable<T> extends BaseRx<T> implements Observable.
         }
     }
 
+    @Override
+    protected void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions, Subscriber subscriber) {
+        if (grantedPermissions != null && grantedPermissions.size() > 0 ) {
+            onGoogleApiClientReady(apiClient, subscriber);
+        } else {
+            if (grantedPermissions != null) requestedPermissions.removeAll(grantedPermissions);
+            subscriber.onError(new PermissionSecurityException("Permissions not granted: " + Arrays.toString(requestedPermissions.toArray())));
+        }
+    }
+
     protected class ApiClientConnectionCallbacks extends BaseRx.ApiClientConnectionCallbacks {
 
         final protected Subscriber<? super T> subscriber;
@@ -109,7 +125,12 @@ public abstract class BaseObservable<T> extends BaseRx<T> implements Observable.
         @Override
         public void onConnected(Bundle bundle) {
             try {
-                onGoogleApiClientReady(apiClient, subscriber);
+                ArrayList<String> requiredPermissions = getRequiredPermissions();
+                if (requiredPermissions == null || requiredPermissions.isEmpty() || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                    onGoogleApiClientReady(apiClient, subscriber);
+                } else {
+                    requestPermissions(requiredPermissions, subscriber);
+                }
             } catch (Throwable ex) {
                 subscriber.onError(ex);
             }

@@ -15,6 +15,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -59,7 +60,7 @@ public abstract class BaseRx<T> {
         this.services = rxGoogle.getApis();
         this.scopes = rxGoogle.getScopes();
 
-        if(timeout != null && timeUnit != null) {
+        if (timeout != null && timeUnit != null) {
             this.timeoutTime = timeout;
             this.timeoutUnit = timeUnit;
         } else {
@@ -77,7 +78,7 @@ public abstract class BaseRx<T> {
     }
 
     protected final <T extends Result> void setupFitnessPendingResult(PendingResult<T> pendingResult, ResultCallback<? super T> resultCallback) {
-        if(timeoutTime != null && timeoutUnit != null) {
+        if (timeoutTime != null && timeoutUnit != null) {
             pendingResult.setResultCallback(resultCallback, timeoutTime, timeoutUnit);
         } else {
             pendingResult.setResultCallback(resultCallback);
@@ -93,7 +94,7 @@ public abstract class BaseRx<T> {
             apiClientBuilder.addApi(service);
         }
 
-        if(scopes != null) {
+        if (scopes != null) {
             for (Scope scope : scopes) {
                 apiClientBuilder.addScope(scope);
             }
@@ -109,34 +110,38 @@ public abstract class BaseRx<T> {
         return apiClient;
     }
 
-    protected void onUnsubscribed(GoogleApiClient apiClient) { }
+    protected void onUnsubscribed(GoogleApiClient apiClient) {
+    }
 
     protected abstract void handleResolutionResult(int resultCode, ConnectionResult connectionResult);
 
-    protected void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions) {}
+    protected ArrayList<String> getRequiredPermissions() {
+        return null;
+    }
+
+    protected abstract void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions, Subscriber subscriber);
 
     static final void onResolutionResult(int resultCode, ConnectionResult connectionResult) {
-        for(BaseRx observable : observableSet) { observable.handleResolutionResult(resultCode, connectionResult); }
+        for (BaseRx observable : observableSet) {
+            observable.handleResolutionResult(resultCode, connectionResult);
+        }
         observableSet.clear();
     }
 
-    protected void requestPermissions(ArrayList<String> permissions, Subscriber subscriber, int requestCode) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            observablePermissionsHandlers.put(requestCode, new Pair<BaseRx, Subscriber>(BaseRx.this, subscriber));
-            Intent intent = new Intent(ctx, ResolutionActivity.class);
-            intent.putExtra(ResolutionActivity.ARG_PERMISSIONS_REQUEST_CODE, requestCode);
-            intent.putStringArrayListExtra(ResolutionActivity.ARG_PERMISSIONS_LIST, permissions);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            ctx.startActivity(intent);
-        } else {
-            onPermissionsResult(requestCode, permissions, permissions);
-        }
+    protected void requestPermissions(ArrayList<String> permissions, Subscriber subscriber) {
+        int requestCode = hashCode();
+        observablePermissionsHandlers.put(requestCode, new Pair<BaseRx, Subscriber>(BaseRx.this, subscriber));
+        Intent intent = new Intent(ctx, ResolutionActivity.class);
+        intent.putExtra(ResolutionActivity.ARG_PERMISSIONS_REQUEST_CODE, requestCode);
+        intent.putStringArrayListExtra(ResolutionActivity.ARG_PERMISSIONS_LIST, permissions);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ctx.startActivity(intent);
     }
 
     static final void onPermissionsResult(int code, List<String> requestedPermissions, List<String> grantedPermissions) {
         Pair<BaseRx, Subscriber> pair = observablePermissionsHandlers.get(code);
         if (pair != null && !pair.second.isUnsubscribed()) {
-            pair.first.handlePermissionsResult(requestedPermissions, grantedPermissions);
+            pair.first.handlePermissionsResult(requestedPermissions, grantedPermissions, pair.second);
             observablePermissionsHandlers.remove(code);
         }
     }
@@ -147,7 +152,8 @@ public abstract class BaseRx<T> {
 
         protected GoogleApiClient apiClient;
 
-        protected ApiClientConnectionCallbacks() { }
+        protected ApiClientConnectionCallbacks() {
+        }
 
         public void setClient(GoogleApiClient client) {
             this.apiClient = client;
