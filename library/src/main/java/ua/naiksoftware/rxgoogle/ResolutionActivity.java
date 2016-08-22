@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import com.google.android.gms.common.ConnectionResult;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /* Copyright 2016 Patrick Löwenstein
@@ -91,6 +92,11 @@ public class ResolutionActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        List<String> granted = new ArrayList<>();
+        for (int i = 0; i < grantResults.length; i++) {
+            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) granted.add(permissions[i]);
+        }
+        setPermissionsResultAndFinish(Arrays.asList(permissions), granted);
     }
 
     @Override
