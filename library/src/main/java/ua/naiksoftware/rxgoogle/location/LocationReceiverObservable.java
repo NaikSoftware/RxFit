@@ -79,13 +79,7 @@ public class LocationReceiverObservable extends BaseObservable<Location> {
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied, but this can be fixed
                         // by showing the user a dialog.
-                        try {
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            status.startResolutionForResult(null, 1 /*request code*/);
-                        } catch (IntentSender.SendIntentException e) {
-                            subscriber.onError(e);
-                        }
+                        resolveStatus(status);
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                         // Location settings are not satisfied. However, we have no way

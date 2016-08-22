@@ -15,6 +15,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.common.api.Status;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,6 +86,13 @@ public abstract class BaseRx<T> {
         } else {
             pendingResult.setResultCallback(resultCallback);
         }
+    }
+
+    protected void resolveStatus(Status status) {
+        Intent intent = new Intent(ctx, ResolutionActivity.class);
+        intent.putExtra(ResolutionActivity.ARG_RESOLVE_STATUS, status);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ctx.startActivity(intent);
     }
 
     protected final GoogleApiClient createApiClient(ApiClientConnectionCallbacks apiClientConnectionCallbacks) {

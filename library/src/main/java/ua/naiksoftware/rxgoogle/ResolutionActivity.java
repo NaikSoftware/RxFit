@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.Status;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,11 +34,13 @@ import java.util.List;
 public class ResolutionActivity extends Activity {
 
     public static final String ARG_CONNECTION_RESULT = "connectionResult";
+    public static final String ARG_RESOLVE_STATUS = "resolveStatus";
     public static final String ARG_PERMISSIONS_LIST = "permissionsList";
     public static final String ARG_PERMISSIONS_REQUEST_CODE = "permissionsRequestCode";
 
     private static final int REQUEST_CODE_RESOLUTION = 123;
     private static final int REQUEST_CODE_PERMISSIONS = 124;
+    private static final int REQUEST_CODE_STATUS = 125;
 
     private static boolean resolutionShown = false;
 
@@ -70,6 +73,13 @@ public class ResolutionActivity extends Activity {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_PERMISSIONS);
+            }
+        } else if (intent.hasExtra(ARG_RESOLVE_STATUS)) { // Resolve Status object
+            Status status = intent.getParcelableExtra(ARG_RESOLVE_STATUS);
+            try {
+                status.startResolutionForResult(this, REQUEST_CODE_STATUS);
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
             }
         } else { // Resolve resolution for google api client
             try {
