@@ -11,12 +11,15 @@ import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import rx.Single;
 import rx.SingleSubscriber;
+import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
@@ -79,6 +82,11 @@ public abstract class BaseSingle<T> extends BaseRx<T> implements Single.OnSubscr
     }
 
     protected abstract void onGoogleApiClientReady(GoogleApiClient apiClient, SingleSubscriber<? super T> subscriber);
+
+    @Override
+    protected void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions, Subscriber subscriber) {
+
+    }
 
     protected final void handleResolutionResult(int resultCode, ConnectionResult connectionResult) {
         for (Map.Entry<GoogleApiClient, SingleSubscriber<? super T>> entry : subscriptionInfoHashMap.entrySet()) {
