@@ -1,7 +1,10 @@
 package ua.naiksoftware.rxgoogle;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.Api;
@@ -11,9 +14,15 @@ import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import rx.Subscriber;
 
 /* Copyright (C) 2015 Michał Charmas (http://blog.charmas.pl)
  *
@@ -35,7 +44,9 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public abstract class BaseRx<T> {
+
     protected static final Set<BaseRx> observableSet = new HashSet<>();
+    protected static final Map<Integer, Pair<BaseRx, Subscriber>> observablePermissionsHandlers = new HashMap<>();
 
     protected final Context ctx;
     private final Api<? extends Api.ApiOptions.NotRequiredOptions>[] services;
@@ -43,10 +54,10 @@ public abstract class BaseRx<T> {
     private final Long timeoutTime;
     private final TimeUnit timeoutUnit;
 
-    protected BaseRx(@NonNull RxGoogle rxFit, Long timeout, TimeUnit timeUnit) {
-        this.ctx = rxFit.getContext();
-        this.services = rxFit.getApis();
-        this.scopes = rxFit.getScopes();
+    protected BaseRx(@NonNull RxGoogle rxGoogle, Long timeout, TimeUnit timeUnit) {
+        this.ctx = rxGoogle.getContext();
+        this.services = rxGoogle.getApis();
+        this.scopes = rxGoogle.getScopes();
 
         if(timeout != null && timeUnit != null) {
             this.timeoutTime = timeout;
@@ -102,9 +113,32 @@ public abstract class BaseRx<T> {
 
     protected abstract void handleResolutionResult(int resultCode, ConnectionResult connectionResult);
 
+    protected void handlePermissionsResult(List<String> requestedPermissions, List<String> grantedPermissions) {}
+
     static final void onResolutionResult(int resultCode, ConnectionResult connectionResult) {
         for(BaseRx observable : observableSet) { observable.handleResolutionResult(resultCode, connectionResult); }
         observableSet.clear();
+    }
+
+    protected void requestPermissions(ArrayList<String> permissions, Subscriber subscriber, int requestCode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            observablePermissionsHandlers.put(requestCode, new Pair<BaseRx, Subscriber>(BaseRx.this, subscriber));
+            Intent intent = new Intent(ctx, ResolutionActivity.class);
+            intent.putExtra(ResolutionActivity.ARG_PERMISSIONS_REQUEST_CODE, requestCode);
+            intent.putStringArrayListExtra(ResolutionActivity.ARG_PERMISSIONS_LIST, permissions);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ctx.startActivity(intent);
+        } else {
+            onPermissionsResult(requestCode, permissions, permissions);
+        }
+    }
+
+    static final void onPermissionsResult(int code, List<String> requestedPermissions, List<String> grantedPermissions) {
+        Pair<BaseRx, Subscriber> pair = observablePermissionsHandlers.get(code);
+        if (pair != null && !pair.second.isUnsubscribed()) {
+            pair.first.handlePermissionsResult(requestedPermissions, grantedPermissions);
+            observablePermissionsHandlers.remove(code);
+        }
     }
 
     protected abstract class ApiClientConnectionCallbacks implements
