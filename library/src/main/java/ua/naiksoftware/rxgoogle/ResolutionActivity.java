@@ -44,8 +44,8 @@ public class ResolutionActivity extends Activity {
 
     private static boolean resolutionShown = false;
 
-    private List<String> permissions;
     private int permissionsRequestCode;
+    private Status status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class ResolutionActivity extends Activity {
     private void handleIntent(Intent intent) {
         if (intent.hasExtra(ARG_PERMISSIONS_LIST)) { // Resolve some permissions
             permissionsRequestCode = intent.getIntExtra(ARG_PERMISSIONS_REQUEST_CODE, -1);
-            permissions = intent.getStringArrayListExtra(ARG_PERMISSIONS_LIST);
+            List<String> permissions = intent.getStringArrayListExtra(ARG_PERMISSIONS_LIST);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 setPermissionsResultAndFinish(permissions, permissions);
                 return;
@@ -75,7 +75,7 @@ public class ResolutionActivity extends Activity {
                 requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_PERMISSIONS);
             }
         } else if (intent.hasExtra(ARG_RESOLVE_STATUS)) { // Resolve Status object
-            Status status = intent.getParcelableExtra(ARG_RESOLVE_STATUS);
+            status = intent.getParcelableExtra(ARG_RESOLVE_STATUS);
             try {
                 status.startResolutionForResult(this, REQUEST_CODE_STATUS);
             } catch (IntentSender.SendIntentException e) {
@@ -106,9 +106,14 @@ public class ResolutionActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_RESOLUTION) {
             setResolutionResultAndFinish(resultCode);
-        } else {
-            setResolutionResultAndFinish(Activity.RESULT_CANCELED);
+        } else if (requestCode == REQUEST_CODE_STATUS) {
+            setStatusResultAndFinish(resultCode);
         }
+    }
+
+    private void setStatusResultAndFinish(int resultCode) {
+        BaseRx.onStatusUserInteractResult(status);
+        finish();
     }
 
     private void setResolutionResultAndFinish(int resultCode) {

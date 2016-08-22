@@ -22,9 +22,11 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import rx.SingleSubscriber;
 import rx.Subscriber;
 import ua.naiksoftware.rxgoogle.BaseObservable;
 import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusResultCallBack;
 
 /**
  * Created by naik on 04.06.16.
@@ -69,17 +71,22 @@ public class LocationReceiverObservable extends BaseObservable<Location> {
                 final Status status = locationSettingsResult.getStatus();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
-                        // Unnecessary check
-                        if (ActivityCompat.checkSelfPermission(apiClient.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(apiClient.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            subscriber.onError(new SecurityException("Location permissions not granted"));
-                            return;
-                        }
-                        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, mLocationRequest, mLocationListener);
+                        makeRequest(apiClient, subscriber);
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied, but this can be fixed
                         // by showing the user a dialog.
-                        resolveStatus(status);
+                        resolveStatus(status, new StatusResultCallBack(new SingleSubscriber<Status>() {
+                            @Override
+                            public void onSuccess(Status value) {
+                                makeRequest(apiClient, subscriber);
+                            }
+
+                            @Override
+                            public void onError(Throwable error) {
+                                makeRequest(apiClient, subscriber);
+                            }
+                        }));
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                         // Location settings are not satisfied. However, we have no way
@@ -89,6 +96,14 @@ public class LocationReceiverObservable extends BaseObservable<Location> {
 
             }
         });
+    }
+
+    private void makeRequest(GoogleApiClient apiClient, Subscriber<? super Location> subscriber) {
+        if (ActivityCompat.checkSelfPermission(apiClient.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(apiClient.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            subscriber.onError(new SecurityException("Location permissions not granted"));
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, mLocationRequest, mLocationListener);
     }
 
     @Override

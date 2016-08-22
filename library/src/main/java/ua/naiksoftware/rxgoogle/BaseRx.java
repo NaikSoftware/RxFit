@@ -50,7 +50,8 @@ import rx.Subscriber;
 public abstract class BaseRx<T> {
 
     protected static final Set<BaseRx> observableSet = new HashSet<>();
-    protected static final Map<Integer, Pair<BaseRx, SubscriberWrapper>> observablePermissionsHandlers = new HashMap<>();
+    private static final Map<Integer, Pair<BaseRx, SubscriberWrapper>> observablePermissionsHandlers = new HashMap<>();
+    private static final Map<Status, StatusResultCallBack>  statusResultCallbacks = new HashMap<>();
 
     protected final Context ctx;
     private final Api<? extends Api.ApiOptions.NotRequiredOptions>[] services;
@@ -86,13 +87,6 @@ public abstract class BaseRx<T> {
         } else {
             pendingResult.setResultCallback(resultCallback);
         }
-    }
-
-    protected void resolveStatus(Status status) {
-        Intent intent = new Intent(ctx, ResolutionActivity.class);
-        intent.putExtra(ResolutionActivity.ARG_RESOLVE_STATUS, status);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        ctx.startActivity(intent);
     }
 
     protected final GoogleApiClient createApiClient(ApiClientConnectionCallbacks apiClientConnectionCallbacks) {
@@ -165,6 +159,19 @@ public abstract class BaseRx<T> {
             pair.first.handlePermissionsResult(requestedPermissions, grantedPermissions, pair.second);
             observablePermissionsHandlers.remove(code);
         }
+    }
+
+    protected void resolveStatus(Status status, StatusResultCallBack callBack) {
+        statusResultCallbacks.put(status, callBack);
+        Intent intent = new Intent(ctx, ResolutionActivity.class);
+        intent.putExtra(ResolutionActivity.ARG_RESOLVE_STATUS, status);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ctx.startActivity(intent);
+    }
+
+    static void onStatusUserInteractResult(Status status) {
+        StatusResultCallBack callBack = statusResultCallbacks.get(status);
+        if (callBack != null) callBack.onResult(status);
     }
 
     protected abstract class ApiClientConnectionCallbacks implements
