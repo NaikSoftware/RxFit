@@ -36,6 +36,6 @@ public class HistoryInsertDataSingle extends BaseSingle<Status> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super Status> subscriber) {
-        setupFitnessPendingResult(Fitness.HistoryApi.insertData(apiClient, dataSet), new StatusResultCallBack(subscriber));
+        setupPendingResult(Fitness.HistoryApi.insertData(apiClient, dataSet), new StatusResultCallBack(subscriber));
     }
 }

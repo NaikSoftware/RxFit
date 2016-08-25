@@ -40,7 +40,7 @@ public class ConfigCreateCustomDataTypeSingle extends BaseSingle<DataType> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super DataType> subscriber) {
-        setupFitnessPendingResult(Fitness.ConfigApi.createCustomDataType(apiClient, dataTypeCreateRequest), new ResultCallback<DataTypeResult>() {
+        setupPendingResult(Fitness.ConfigApi.createCustomDataType(apiClient, dataTypeCreateRequest), new ResultCallback<DataTypeResult>() {
             @Override
             public void onResult(@NonNull DataTypeResult dataTypeResult) {
                 if (!dataTypeResult.getStatus().isSuccess()) {

@@ -41,9 +41,9 @@ public class BleClaimDeviceSingle extends BaseSingle<Status> {
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super Status> subscriber) {
         ResultCallback<Status> resultCallback = new StatusResultCallBack(subscriber);
         if(bleDevice != null) {
-            setupFitnessPendingResult(Fitness.BleApi.claimBleDevice(apiClient, bleDevice), resultCallback);
+            setupPendingResult(Fitness.BleApi.claimBleDevice(apiClient, bleDevice), resultCallback);
         } else {
-            setupFitnessPendingResult(Fitness.BleApi.claimBleDevice(apiClient, deviceAddress), resultCallback);
+            setupPendingResult(Fitness.BleApi.claimBleDevice(apiClient, deviceAddress), resultCallback);
 
         }
     }

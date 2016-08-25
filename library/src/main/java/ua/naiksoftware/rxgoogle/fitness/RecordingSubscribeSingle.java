@@ -43,9 +43,9 @@ public class RecordingSubscribeSingle extends BaseSingle<Status> {
         ResultCallback<Status> resultCallback = new StatusResultCallBack(subscriber);
 
         if(dataSource != null) {
-            setupFitnessPendingResult(Fitness.RecordingApi.subscribe(apiClient, dataSource), resultCallback);
+            setupPendingResult(Fitness.RecordingApi.subscribe(apiClient, dataSource), resultCallback);
         } else {
-            setupFitnessPendingResult(Fitness.RecordingApi.subscribe(apiClient, dataType), resultCallback);
+            setupPendingResult(Fitness.RecordingApi.subscribe(apiClient, dataType), resultCallback);
         }
     }
 }

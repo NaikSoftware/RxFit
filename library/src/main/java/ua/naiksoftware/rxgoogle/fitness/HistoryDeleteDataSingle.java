@@ -36,6 +36,6 @@ public class HistoryDeleteDataSingle extends BaseSingle<Status> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super Status> subscriber) {
-        setupFitnessPendingResult(Fitness.HistoryApi.deleteData(apiClient, dataDeleteRequest), new StatusResultCallBack(subscriber));
+        setupPendingResult(Fitness.HistoryApi.deleteData(apiClient, dataDeleteRequest), new StatusResultCallBack(subscriber));
     }
 }

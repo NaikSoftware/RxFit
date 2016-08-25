@@ -44,7 +44,7 @@ public class SensorsFindDataSourcesSingle extends BaseSingle<List<DataSource>> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super List<DataSource>> subscriber) {
-        setupFitnessPendingResult(Fitness.SensorsApi.findDataSources(apiClient, dataSourcesRequest), new ResultCallback<DataSourcesResult>() {
+        setupPendingResult(Fitness.SensorsApi.findDataSources(apiClient, dataSourcesRequest), new ResultCallback<DataSourcesResult>() {
             @Override
             public void onResult(@NonNull DataSourcesResult dataSourcesResult) {
                 if (!dataSourcesResult.getStatus().isSuccess()) {

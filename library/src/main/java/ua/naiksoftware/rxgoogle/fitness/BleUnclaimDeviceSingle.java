@@ -42,9 +42,9 @@ public class BleUnclaimDeviceSingle extends BaseSingle<Status> {
         ResultCallback<Status> resultCallback = new StatusResultCallBack(subscriber);
 
         if(bleDevice != null) {
-            setupFitnessPendingResult(Fitness.BleApi.unclaimBleDevice(apiClient, bleDevice), resultCallback);
+            setupPendingResult(Fitness.BleApi.unclaimBleDevice(apiClient, bleDevice), resultCallback);
         } else {
-            setupFitnessPendingResult(Fitness.BleApi.unclaimBleDevice(apiClient, deviceAddress), resultCallback);
+            setupPendingResult(Fitness.BleApi.unclaimBleDevice(apiClient, deviceAddress), resultCallback);
         }
     }
 }

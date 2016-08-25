@@ -49,7 +49,7 @@ public class SensorsDataPointObservable extends BaseObservable<DataPoint> {
             }
         };
 
-        setupFitnessPendingResult(Fitness.SensorsApi.add(apiClient, sensorRequest, dataPointListener), new ResultCallback<Status>() {
+        setupPendingResult(Fitness.SensorsApi.add(apiClient, sensorRequest, dataPointListener), new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
                 if (!status.isSuccess()) {

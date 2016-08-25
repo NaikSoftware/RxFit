@@ -39,7 +39,7 @@ public class HistoryReadDataSingle extends BaseSingle<DataReadResult> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super DataReadResult> subscriber) {
-        setupFitnessPendingResult(Fitness.HistoryApi.readData(apiClient, dataReadRequest), new ResultCallback<DataReadResult>() {
+        setupPendingResult(Fitness.HistoryApi.readData(apiClient, dataReadRequest), new ResultCallback<DataReadResult>() {
             @Override
             public void onResult(@NonNull DataReadResult dataReadResult) {
                 if (!dataReadResult.getStatus().isSuccess()) {

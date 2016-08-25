@@ -81,7 +81,7 @@ public abstract class BaseRx<T> {
         timeoutUnit = null;
     }
 
-    protected final <T extends Result> void setupFitnessPendingResult(PendingResult<T> pendingResult, ResultCallback<? super T> resultCallback) {
+    protected final <T extends Result> void setupPendingResult(PendingResult<T> pendingResult, ResultCallback<? super T> resultCallback) {
         if (timeoutTime != null && timeoutUnit != null) {
             pendingResult.setResultCallback(resultCallback, timeoutTime, timeoutUnit);
         } else {

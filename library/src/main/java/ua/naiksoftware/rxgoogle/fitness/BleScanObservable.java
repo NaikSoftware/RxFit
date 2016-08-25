@@ -65,7 +65,7 @@ public class BleScanObservable extends BaseObservable<BleDevice> {
         if(dataTypes != null) { startBleScanRequest.setDataTypes(dataTypes); }
         if(stopTimeSecs != null) { startBleScanRequest.setTimeoutSecs(stopTimeSecs); }
 
-        setupFitnessPendingResult(Fitness.BleApi.startBleScan(apiClient, startBleScanRequest.build()), new ResultCallback<Status>() {
+        setupPendingResult(Fitness.BleApi.startBleScan(apiClient, startBleScanRequest.build()), new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
                 if(!status.isSuccess()) {

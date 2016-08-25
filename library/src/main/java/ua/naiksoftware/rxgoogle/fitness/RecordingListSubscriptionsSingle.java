@@ -53,9 +53,9 @@ public class RecordingListSubscriptionsSingle extends BaseSingle<List<Subscripti
         };
 
         if(dataType == null) {
-            setupFitnessPendingResult(Fitness.RecordingApi.listSubscriptions(apiClient), resultCallback);
+            setupPendingResult(Fitness.RecordingApi.listSubscriptions(apiClient), resultCallback);
         } else {
-            setupFitnessPendingResult(Fitness.RecordingApi.listSubscriptions(apiClient, dataType), resultCallback);
+            setupPendingResult(Fitness.RecordingApi.listSubscriptions(apiClient, dataType), resultCallback);
         }
     }
 }

@@ -26,6 +26,7 @@ import rx.SingleSubscriber;
 import rx.Subscriber;
 import ua.naiksoftware.rxgoogle.BaseObservable;
 import ua.naiksoftware.rxgoogle.RxGoogle;
+import ua.naiksoftware.rxgoogle.StatusException;
 import ua.naiksoftware.rxgoogle.StatusResultCallBack;
 
 /**
@@ -98,12 +99,17 @@ public class LocationReceiverObservable extends BaseObservable<Location> {
         });
     }
 
-    private void makeRequest(GoogleApiClient apiClient, Subscriber<? super Location> subscriber) {
+    private void makeRequest(GoogleApiClient apiClient, final Subscriber<? super Location> subscriber) {
         if (ActivityCompat.checkSelfPermission(apiClient.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(apiClient.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             subscriber.onError(new SecurityException("Location permissions not granted"));
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, mLocationRequest, mLocationListener);
+        setupPendingResult(LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, mLocationRequest, mLocationListener), new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                if (!status.isSuccess()) subscriber.onError(new StatusException(status));
+            }
+        });
     }
 
     @Override

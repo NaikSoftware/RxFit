@@ -39,7 +39,7 @@ public class ConfigReadDataTypeSingle extends BaseSingle<DataType> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super DataType> subscriber) {
-        setupFitnessPendingResult(Fitness.ConfigApi.readDataType(apiClient, dataTypeName), new ResultCallback<DataTypeResult>() {
+        setupPendingResult(Fitness.ConfigApi.readDataType(apiClient, dataTypeName), new ResultCallback<DataTypeResult>() {
             @Override
             public void onResult(@NonNull DataTypeResult dataTypeResult) {
                 if (!dataTypeResult.getStatus().isSuccess()) {

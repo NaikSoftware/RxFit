@@ -41,7 +41,7 @@ public class BleListClaimedDevicesSingle extends BaseSingle<List<BleDevice>> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super List<BleDevice>> subscriber) {
-        setupFitnessPendingResult(Fitness.BleApi.listClaimedBleDevices(apiClient), new ResultCallback<BleDevicesResult>() {
+        setupPendingResult(Fitness.BleApi.listClaimedBleDevices(apiClient), new ResultCallback<BleDevicesResult>() {
             @Override
             public void onResult(@NonNull BleDevicesResult bleDevicesResult) {
                 if (!bleDevicesResult.getStatus().isSuccess()) {

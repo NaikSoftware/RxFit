@@ -46,11 +46,11 @@ public class RecordingUnsubscribeSingle extends BaseSingle<Status> {
         ResultCallback<Status> resultCallback = new StatusResultCallBack(subscriber);
 
         if(dataSource != null) {
-            setupFitnessPendingResult(Fitness.RecordingApi.unsubscribe(apiClient, dataSource), resultCallback);
+            setupPendingResult(Fitness.RecordingApi.unsubscribe(apiClient, dataSource), resultCallback);
         } else if(dataType != null) {
-            setupFitnessPendingResult(Fitness.RecordingApi.unsubscribe(apiClient, dataType), resultCallback);
+            setupPendingResult(Fitness.RecordingApi.unsubscribe(apiClient, dataType), resultCallback);
         } else {
-            setupFitnessPendingResult(Fitness.RecordingApi.unsubscribe(apiClient, subscription), resultCallback);
+            setupPendingResult(Fitness.RecordingApi.unsubscribe(apiClient, subscription), resultCallback);
         }
     }
 }

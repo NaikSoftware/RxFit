@@ -39,7 +39,7 @@ public class SessionReadSingle extends BaseSingle<SessionReadResult> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super SessionReadResult> subscriber) {
-        setupFitnessPendingResult(Fitness.SessionsApi.readSession(apiClient, sessionReadRequest), new ResultCallback<SessionReadResult>() {
+        setupPendingResult(Fitness.SessionsApi.readSession(apiClient, sessionReadRequest), new ResultCallback<SessionReadResult>() {
             @Override
             public void onResult(@NonNull SessionReadResult sessionReadResult) {
                 if (!sessionReadResult.getStatus().isSuccess()) {

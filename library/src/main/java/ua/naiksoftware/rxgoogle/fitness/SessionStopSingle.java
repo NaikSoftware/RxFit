@@ -40,7 +40,7 @@ public class SessionStopSingle extends BaseSingle<List<Session>> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super List<Session>> subscriber) {
-        setupFitnessPendingResult(Fitness.SessionsApi.stopSession(apiClient, identifier), new ResultCallback<SessionStopResult>() {
+        setupPendingResult(Fitness.SessionsApi.stopSession(apiClient, identifier), new ResultCallback<SessionStopResult>() {
             @Override
             public void onResult(@NonNull SessionStopResult sessionStopResult) {
                 if (!sessionStopResult.getStatus().isSuccess()) {

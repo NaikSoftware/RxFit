@@ -40,7 +40,7 @@ public class HistoryReadDailyTotalSingle extends BaseSingle<DataSet> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super DataSet> subscriber) {
-        setupFitnessPendingResult(Fitness.HistoryApi.readDailyTotal(apiClient, dataType), new ResultCallback<DailyTotalResult>() {
+        setupPendingResult(Fitness.HistoryApi.readDailyTotal(apiClient, dataType), new ResultCallback<DailyTotalResult>() {
             @Override
             public void onResult(@NonNull DailyTotalResult dailyTotalResult) {
                 if (!dailyTotalResult.getStatus().isSuccess()) {

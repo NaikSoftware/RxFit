@@ -37,6 +37,6 @@ public class SessionRegisterSingle extends BaseSingle<Status> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super Status> subscriber) {
-        setupFitnessPendingResult(Fitness.SessionsApi.registerForSessions(apiClient, pendingIntent), new StatusResultCallBack(subscriber));
+        setupPendingResult(Fitness.SessionsApi.registerForSessions(apiClient, pendingIntent), new StatusResultCallBack(subscriber));
     }
 }

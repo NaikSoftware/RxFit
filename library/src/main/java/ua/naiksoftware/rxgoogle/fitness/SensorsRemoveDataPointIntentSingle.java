@@ -37,6 +37,6 @@ public class SensorsRemoveDataPointIntentSingle extends BaseSingle<Status> {
 
     @Override
     protected void onGoogleApiClientReady(GoogleApiClient apiClient, final SingleSubscriber<? super Status> subscriber) {
-        setupFitnessPendingResult(Fitness.SensorsApi.remove(apiClient, pendingIntent), new StatusResultCallBack(subscriber));
+        setupPendingResult(Fitness.SensorsApi.remove(apiClient, pendingIntent), new StatusResultCallBack(subscriber));
     }
 }
