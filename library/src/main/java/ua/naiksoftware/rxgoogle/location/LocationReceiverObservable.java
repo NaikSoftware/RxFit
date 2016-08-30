@@ -108,6 +108,7 @@ public class LocationReceiverObservable extends BaseObservable<Location> {
             @Override
             public void onResult(@NonNull Status status) {
                 if (!status.isSuccess()) subscriber.onError(new StatusException(status));
+                else subscriber.onStart();
             }
         });
     }
